@@ -7,8 +7,16 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class LibTest {
-    @Test public void testAppHasAGreeting() {
+    
+    @Test public void testRightDateFormat() {
         App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+        String dateTimeAmericano = classUnderTest.getDateTimePadraoAmericano().toString();
+        assertEquals("2020-05-26T21:49:00.000-03:00", dateTimeAmericano);
+    }
+
+    @Test public void testWrongDateFormat() {
+        App classUnderTest = new App();
+        String dateTimeAmericano = classUnderTest.getDateTimePadraoAmericano().toString();
+        assertEquals("26-05-2020T21:49:00.000-03:00", dateTimeAmericano);
     }
 }

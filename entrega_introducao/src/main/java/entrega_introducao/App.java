@@ -3,12 +3,17 @@
  */
 package entrega_introducao;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import java.util.Locale;
+
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
+    public static DateTime getDateTimePadraoAmericano() {
+        String padrao = DateTimeFormat.patternForStyle("SS", new Locale("en", "US"));
+        return DateTime.parse("05/26/20, 9:49 pm", DateTimeFormat.forPattern(padrao));
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    public static void main(String[] args) {        
+        System.out.println("Padrao Norte-Americano: " + getDateTimePadraoAmericano());
     }
 }
