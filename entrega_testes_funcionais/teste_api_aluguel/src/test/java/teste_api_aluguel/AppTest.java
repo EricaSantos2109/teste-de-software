@@ -3,85 +3,154 @@
  */
 package teste_api_aluguel;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// valores_limite_dia = { -1, 0, 1, 5, 6, 10, 11, 15, 16, 30, 31 }
+import org.junit.jupiter.api.Test;
+import org.json.JSONObject;
+
+// valores_limite_dia = { -2, -1, 0, 1, 2, 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 16, 17, 29, 30, 31, 32 }
 
 public class AppTest {
     private final double VALOR_NOMINAL = 800.00;
 
-    @Test public void testDiaNegativoESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, -1);
+    @Test
+    public void testDiaDoisNegativoESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, -2);
         // Como não existe dia negativo, esperamos um retorno de -1
-        assertTrue(retornoAPI.contains("-1"));
+        assertEquals(-1.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaZeroESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 0);
+    @Test
+    public void testDiaUmNegativoESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, -1);
+        // Como não existe dia negativo, esperamos um retorno de -1
+        assertEquals(-1.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaZeroESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 0);
         // Como não existe dia zero, esperamos um retorno de -1
-        assertTrue(retornoAPI.contains("-1"));
+        assertEquals(-1.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaUmESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 1);
+    @Test
+    public void testDiaUmESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 1);
         // Esperamos um desconto de 10%
-        assertTrue(retornoAPI.contains("720.0"));
+        assertEquals(720.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaCincoESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 5);
+    @Test
+    public void testDiaDoisESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 2);
         // Esperamos um desconto de 10%
-        assertTrue(retornoAPI.contains("720.0"));
+        assertEquals(720.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaSeisESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 6);
+    @Test
+    public void testDiaQuatroESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 4);
+        // Esperamos um desconto de 10%
+        assertEquals(720.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaCincoESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 5);
+        // Esperamos um desconto de 10%
+        assertEquals(720.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaSeisESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 6);
         // Esperamos um desconto de 5%
-        assertTrue(retornoAPI.contains("760.0"));
+        assertEquals(760.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaDezESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 10);
+    @Test
+    public void testDiaSeteESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 7);
         // Esperamos um desconto de 5%
-        assertTrue(retornoAPI.contains("760.0"));
+        assertEquals(760.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaOnzeESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 11);
+    @Test
+    public void testDiaNoveESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 9);
+        // Esperamos um desconto de 5%
+        assertEquals(760.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaDezESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 10);
+        // Esperamos um desconto de 5%
+        assertEquals(760.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaOnzeESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 11);
         // Esperamos o valor integral (sem desconto)
-        assertTrue(retornoAPI.contains("800.0"));
+        assertEquals(800.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaQuinzeESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 15);
+    @Test
+    public void testDiaDozeESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 12);
         // Esperamos o valor integral (sem desconto)
-        assertTrue(retornoAPI.contains("800.0"));
+        assertEquals(800.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaDezesseisESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 16);
-        assertTrue(retornoAPI.contains("816.8"));
+    @Test
+    public void testDiaQuatorzeESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 14);
+        // Esperamos o valor integral (sem desconto)
+        assertEquals(800.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaTrintaESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 30);
-        assertTrue(retornoAPI.contains("828.0"));
+    @Test
+    public void testDiaQuinzeESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 15);
+        // Esperamos o valor integral (sem desconto)
+        assertEquals(800.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
     }
 
-    @Test public void testDiaTrintaUmESMR() {
-        App instanciaApp = new App();
-        String retornoAPI = instanciaApp.requisicaoAluguel(VALOR_NOMINAL, 31);
-        assertTrue(retornoAPI.contains("-1"));
+    @Test
+    public void testDiaDezesseisESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 16);
+        assertEquals(816.8f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaDezesseteESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 17);
+        assertEquals(817.6f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaVinteNoveESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 29);
+        assertEquals(827.2f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaTrintaESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 30);
+        assertEquals(828.0f, retornoAPI.getFloat("valor_calculado"), 0.01);
+    }
+
+    @Test
+    public void testDiaTrintaUmESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 31);
+        assertEquals(-1.0f, retornoAPI.getInt("valor_calculado"), 0.01);
+    }
+    
+    @Test
+    public void testDiaTrintaDoisESMR() {
+        JSONObject retornoAPI = App.requisicaoAluguel(VALOR_NOMINAL, 32);
+        assertEquals(-1.0f, retornoAPI.getInt("valor_calculado"), 0.01);
     }
 }

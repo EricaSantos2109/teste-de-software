@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class App {
@@ -50,14 +51,25 @@ public class App {
         return str.replace("{", "%7B").replace("}", "%7D").replace("\"", "%22");
     }
 
-    public static String requisicaoAluguel(double valorNominal, int dia) {
+    private static String trataRetorno(String retorno) {
+        // Remove os caracteres que não deveriam estar no retorno da API.
+        return retorno.substring(1, retorno.length()-2).replace("\\", "");
+    }
+
+    public static JSONObject requisicaoAluguel(double valorNominal, int dia) {
         Aluguel objetoAluguel = new Aluguel(valorNominal, dia);
         JSONObject objetoJSONAluguel = new JSONObject(objetoAluguel);
         String stringObjetoJSON = codificaString(objetoJSONAluguel.toString());
         try {
-            return requisicaoGet(URL_API_ALUGUEL, "dados=" + stringObjetoJSON);
+            String retornoAPI = requisicaoGet(URL_API_ALUGUEL, "dados=" + stringObjetoJSON);
+            JSONObject objetoRetorno = new JSONObject(trataRetorno(retornoAPI));
+            return objetoRetorno;
+        } catch (JSONException je) {
+            System.out.println("Erro ao tentar converter o retorno para um objeto JSON! Stacktrace:\n" + je.getStackTrace());
+            return null;
         } catch (Exception e) {
-            return "Erro ao realizar a requisição HTTP! Stacktrace:\n" + e.getStackTrace();
+            System.out.println("Erro ao realizar a requisição HTTP! Stacktrace:\n" + e.getStackTrace());
+            return null;
         }
     }
 
@@ -68,8 +80,8 @@ public class App {
         double valorNominal = scn.nextDouble();
         System.out.println("Insira o dia de pagamento:\n");
         int dia = scn.nextInt();
-        String retornoAPI = requisicaoAluguel(valorNominal, dia);
-        System.out.println("\nRetorno da API:\n" + retornoAPI);
+        JSONObject retornoAPI = requisicaoAluguel(valorNominal, dia);
+        System.out.println("\nRetorno da API:\n" + retornoAPI.toString());
         scn.close();
     }
 }
